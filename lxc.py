@@ -25,16 +25,16 @@ Save this under $VG_Name.
 
 The name for your lxc container will be the name for your lv as well.
 """
-global NAME='test1'
-global FS_TYPE='ext3'
-global VG_NAME='test-rodriguez' #your root vg name
-global LV_NAME=NAME + '_root' #name for the new LXC Container
-global LV_SIZE='1G' #we are using the lv-create options, everthing they take as size input is fine
-global MOUNT_PATH='/lxc/' + LV_NAME
+NAME = 'test1'
+FS_TYPE = 'ext3'
+VG_NAME = 'test-rodriguez' #your root vg name
+LV_NAME = NAME + '_root' #name for the new LXC Container
+LV_SIZE = '1G' #we are using the lv-create options, everthing they take as size input is fine
+MOUNT_PATH = '/lxc/' + LV_NAME
 
 # and now for the config files
-global LXC_CONFIG_PATH='configs/lxc-debian'
-global MOUNT_CONFIG='configs/mount-options' #this should be a single line which will be added to /etc/fstab
+LXC_CONFIG_PATH = 'configs/lxc-debian'
+MOUNT_CONFIG = 'configs/mount-options' #this should be a single line which will be added to /etc/fstab
 
 
 
@@ -54,14 +54,15 @@ def main(argv=None):
     
     return 2
 
-def lv_find_vg(self):
-    print __self__.VG_NAME
+def lv_find_vg():
+    print VG_NAME
     p = sub.Popen(["vgdisplay"], shell=False, stdout=sub.PIPE, stderr=sub.PIPE)
     try:
         out = p.stdout.readlines()
         output = out[1].split()[2]
         print "VG Name: " + output
-        print __self__.VG_NAME = output
+        VG_NAME = output
+        print VG_NAME
     except:
         print "Fehler! " + p.stderror.read()
 
