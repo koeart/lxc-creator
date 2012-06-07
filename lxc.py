@@ -67,24 +67,29 @@ def lv_find_current_vg():
 
     p = sub.Popen(["vgdisplay"], shell=False, stdout=sub.PIPE, stderr=sub.PIPE)
     try:
+        #vgdisplay gives you a lot of information
         out = p.stdout.readlines()
+        # we just need the second line and then - the third argument in the list
         vg_name = out[1].split()[2]
         print "VG Name: " + vg_name
+        return vg_name
     except:
         print "Fehler! " + p.stderror.read()
-    return vg_name
+        return NULL
 
-def lv_create():
+def lv_create(lv_size, lv_name, vg_name):
     """
     here we create our logical volume for the new container.
     we give it a lv_size, a name and a volume group.
     """
 
-    p = sub.Popen(["lvcreate", "-L" + LV_SIZE, "-n"+ LV_NAME, VG_NAME], shell=False, stdout=sub.PIPE, stderr=sub.PIPE)
+    p = sub.Popen(["lvcreate", "-L" + lv_size, "-n"+ lv_name, vg_name], shell=False, stdout=sub.PIPE, stderr=sub.PIPE)
     try:
         print p.stdout.read()
+        return True
     except:
         print "Fehler!" + p.stderror.read()
+        return False
 
 def create_fs():
     """
@@ -94,13 +99,43 @@ def create_fs():
     p = sub.Popen(["mkfs."+__self__.FS_TYPE, "dev/"+__self__.VG_NAME+"/"+__self__.LV_NAME], shell=False, stdout=sub.PIPE, stderr=sub.PIPE)
     try:
         print p.stdout.read()
+        return True
     except:
         print "Fehler! " + p.stderror.read()
+        return False
 
 def create_sample_config():
     """
     this function simply creates a simple sample config. In case you want to test this stuff, but don't have a config at hand or don't know what to setup.
+    FIXME: Polish it, so sample configuration looks for volume group name and stuff like this
+    Here is it's should-be content:
+
+        [global]
+        name = name_of_container
+        fs_type = ext3 # or some other
+        vg_name = name_of_volumegroup
+        lv_size = 4G # desired size
+        mount_path = /lxc/ # your favorite mount-path for the container
+
+        [extern]
+        lxc_config = /usr/lib/lxc/templates/lxc-debian #your favorit lxc-install script
+        mount_config = ./configs/mount-options
     """
+    config = ConfigParser.RawConfigParser()
+    config.add_section('extern')
+    config.add_section('global')
+    config.set('extern', 'mount_config', './mount-options')
+    config.set('extern', 'lxc_config', '/usr/lib/lxc/templates/lxc-debian')
+    config.set('global', 'mount_path', '/lxc/')
+    config.set('global', 'lv_size', '4G')
+    config.set('global', 'vg_name', 'rodriguez')
+    config.set('global', 'fs_type', 'ext3')
+    config.set('global', 'name', 'test1')
+
+    with open('./configs/globalconfig.cfg', 'wb') as globalconfig:
+        config.write(globalconfig)
+
+    return True
 
 
 if __name__ == "__main__":
