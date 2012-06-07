@@ -53,13 +53,6 @@ dev main(argv=None):
             print >>sys.stderr, "for help use --help"
     return 2
 
-def lv_create():
-    p = sub.Popen(["lvcreate", "-L" + LV_SIZE, "-n"+ LV_NAME, VG_NAME], shell=False, stdout=sub.PIPE, stderr=sub.PIPE)
-    try:
-        print p.stdout.read()
-    except:
-        print "Fehler!" + p.stderror.read()
-
 def lv_find_vg():
     p = sub.Popen(["vgdisplay"], shell=false, stdout=sub.PIPE, stderr=sub.PIPE)
     try:
@@ -70,6 +63,19 @@ def lv_find_vg():
     except:
         print "Fehler! " + p.stderror.read()
 
+def lv_create():
+    p = sub.Popen(["lvcreate", "-L" + LV_SIZE, "-n"+ LV_NAME, VG_NAME], shell=False, stdout=sub.PIPE, stderr=sub.PIPE)
+    try:
+        print p.stdout.read()
+    except:
+        print "Fehler!" + p.stderror.read()
+
+def create_fs():
+    p = sub.Popen(["mkfs."+FS_TYPE, "dev/"+VG_NAME+"/"+LV_NAME], shell=false, stdout=sub.PIPE, stderr=sub.PIPE)
+    try:
+        print p.stdout.read()
+    except:
+        print "Fehler! " + p.stderror:read()
 
 
 if __name__ == "__main__":
