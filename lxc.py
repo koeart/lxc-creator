@@ -25,21 +25,20 @@ Save this under $VG_Name.
 
 The name for your lxc container will be the name for your lv as well.
 """
-
-NAME='test1'
-FS_TYPE='ext3'
-VG_NAME='rodriguez' #your root vg name
-LV_NAME=NAME + '_root' #name for the new LXC Container
-LV_SIZE='1G' #we are using the lv-create options, everthing they take as size input is fine
-MOUNT_PATH='/lxc/' + LV_NAME
+global NAME='test1'
+global FS_TYPE='ext3'
+global VG_NAME='test-rodriguez' #your root vg name
+global LV_NAME=NAME + '_root' #name for the new LXC Container
+global LV_SIZE='1G' #we are using the lv-create options, everthing they take as size input is fine
+global MOUNT_PATH='/lxc/' + LV_NAME
 
 # and now for the config files
-LXC_CONFIG_PATH='configs/lxc-debian'
-MOUNT_CONFIG='configs/mount-options' #this should be a single line which will be added to /etc/fstab
+global LXC_CONFIG_PATH='configs/lxc-debian'
+global MOUNT_CONFIG='configs/mount-options' #this should be a single line which will be added to /etc/fstab
 
 
 
-dev main(argv=None):
+def main(argv=None):
     if argv is None:
         argv = sys.argv
         try:
@@ -51,15 +50,18 @@ dev main(argv=None):
         except Usage, err:
             print >>sys.stderr, err.msg
             print >>sys.stderr, "for help use --help"
+
+    
     return 2
 
-def lv_find_vg():
-    p = sub.Popen(["vgdisplay"], shell=false, stdout=sub.PIPE, stderr=sub.PIPE)
+def lv_find_vg(self):
+    print __self__.VG_NAME
+    p = sub.Popen(["vgdisplay"], shell=False, stdout=sub.PIPE, stderr=sub.PIPE)
     try:
         out = p.stdout.readlines()
         output = out[1].split()[2]
         print "VG Name: " + output
-        VG_NAME = output
+        print __self__.VG_NAME = output
     except:
         print "Fehler! " + p.stderror.read()
 
@@ -71,14 +73,14 @@ def lv_create():
         print "Fehler!" + p.stderror.read()
 
 def create_fs():
-    p = sub.Popen(["mkfs."+FS_TYPE, "dev/"+VG_NAME+"/"+LV_NAME], shell=false, stdout=sub.PIPE, stderr=sub.PIPE)
+    p = sub.Popen(["mkfs."+__self__.FS_TYPE, "dev/"+__self__.VG_NAME+"/"+__self__.LV_NAME], shell=False, stdout=sub.PIPE, stderr=sub.PIPE)
     try:
         print p.stdout.read()
     except:
-        print "Fehler! " + p.stderror:read()
+        print "Fehler! " + p.stderror.read()
 
 
 if __name__ == "__main__":
     sys.exit(main())
     print "hello world"
-    
+
