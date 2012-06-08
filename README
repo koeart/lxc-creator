@@ -1,0 +1,28 @@
+This is a little python project which shall help to setup lxc containers using lxc and lvm.
+
+It makes use of the existing lxc-create scripts and features, but enhances it with some lvm related stuff.
+
+What it does:
+- check whether a volume group exists
+- creates a logical volume within that group
+- creates a filesystem
+- runs lxc-debian installation script (TODO: give it a config option)
+- creates a lxc-config file (TODO: from a template with your options)
+
+Structure:
+lxc.py: the actual script
+configs/: folder for your config/template files
+configs/globalconfig.cfg: holds some basic configurations. [global] sections is for your name, size etc, [extern] is where the path to the scripts et al are written down. You can crate a basic global config with some preset values if you run lxc.create_sample_config()
+
+What you still need to do:
+- make sure you are root
+- run it within the vg you want to create the lv in
+- better read and check it before you use it
+
+Where is it right now?
+right now, the functions can be tested from within a python interpreter
+
+TODO1:
+make everything actually run by starting the script
+
+TODO2: Make everything more customizeable by passing commandline options and other templates for example for creating the macadresses and editing the lxc-config.
