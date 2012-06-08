@@ -56,7 +56,7 @@ def import_config(configfile):
     The [extern] section can provide links to other configuration files and scripts we depend upon or want to use.
     """
     
-    config = ConfigParser.RawConfigParser()
+    config = ConfigParser.SafeConfigParser()
     config.read([configfile])
     return config
 
@@ -104,6 +104,12 @@ def create_fs(fs_type, vg_name, lv_name):
     except:
         print "Fehler! " + p.stderror.read()
         return False
+
+def mount_lv(vg_name, lv_name, dev_path, mount_path):
+    p = sub.Popen(["mount", "-t","auto", dev_path, mount_path], shell=False, stdout=sub.PIPE, stderr=sub.PIPE)
+    print "stdout: " + p.stdout.read()
+    print "Error: " + p.stderr.read()
+   
 
 def create_sample_config():
     """
