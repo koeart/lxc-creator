@@ -55,7 +55,7 @@ def import_config(configfile):
     It has a [global] section, containing a 'name' for our container, the filesystemtype 'fs_type', a volumegroup name 'vg_name', the desired logical size 'lv_size' and last but not least some mount path 'mount_path'.
     The [extern] section can provide links to other configuration files and scripts we depend upon or want to use.
     """
-
+    
     config = ConfigParser.RawConfigParser()
     config.read([configfile])
     return config
@@ -96,9 +96,10 @@ def create_fs(fs_type, vg_name, lv_name):
     here we create a new filesystem for our logical volume. important so we can install some linux distro into it.
     """
 
-    p = sub.Popen(["mkfs."+ fs_type, "dev/"+ vg_name+"/"+ lv_name], shell=False, stdout=sub.PIPE, stderr=sub.PIPE)
+    p = sub.Popen(["mkfs."+ fs_type, "/dev/mapper/"+ vg_name+"-"+ lv_name + "_root"], shell=False, stdout=sub.PIPE, stderr=sub.PIPE)
     try:
         print p.stdout.read()
+        print p.stderr.read()
         return True
     except:
         print "Fehler! " + p.stderror.read()
