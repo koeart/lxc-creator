@@ -91,12 +91,12 @@ def lv_create(lv_size, lv_name, vg_name):
         print "Fehler!" + p.stderror.read()
         return False
 
-def create_fs():
+def create_fs(fs_type, vg_name, lv_name):
     """
     here we create a new filesystem for our logical volume. important so we can install some linux distro into it.
     """
 
-    p = sub.Popen(["mkfs."+__self__.FS_TYPE, "dev/"+__self__.VG_NAME+"/"+__self__.LV_NAME], shell=False, stdout=sub.PIPE, stderr=sub.PIPE)
+    p = sub.Popen(["mkfs."+ fs_type, "dev/"+ vg_name+"/"+ lv_name], shell=False, stdout=sub.PIPE, stderr=sub.PIPE)
     try:
         print p.stdout.read()
         return True
@@ -134,7 +134,6 @@ def create_sample_config():
 
     with open('./configs/globalconfig.cfg', 'wb') as globalconfig:
         config.write(globalconfig)
-
     return True
 
 
