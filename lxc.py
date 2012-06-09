@@ -122,7 +122,7 @@ def create_lxc(lxc_name, lxc_script, mount_path):
     lxc-scripte nehmen folgende Parameter auf: rootfs and a hostname
     """
 
-    p = sub.Popen(["/usr/lib/lxc/templates/"+ lxc_script, "-p", mount_path], shell=False, stdout=sub.PIPE, stderr=sub.PIPE)
+    p = sub.Popen([lxc_script, "-p", mount_path], shell=False, stdout=sub.PIPE, stderr=sub.PIPE)
     print "Fertig: " + p.stdout.read()
     print "Fehler: " + p.stderr.read()
 
