@@ -40,7 +40,6 @@ def main(argv=None):
             except getopt.error, msg:
                 raise Usage(msg)
             # more code, unchanged
-            
         except Usage, err:
             print >>sys.stderr, err.msg
             print >>sys.stderr, "for help use --help"
@@ -106,10 +105,28 @@ def create_fs(fs_type, vg_name, lv_name):
         return False
 
 def mount_lv(vg_name, lv_name, dev_path, mount_path):
+    """
+    here the logical volume gets mounted.
+    both, dev_path and mount_path can be found in the globalconfig.cfg file
+    """
+
     p = sub.Popen(["mount", "-t","auto", dev_path, mount_path], shell=False, stdout=sub.PIPE, stderr=sub.PIPE)
     print "stdout: " + p.stdout.read()
     print "Error: " + p.stderr.read()
    
+def create_lxc(lxc_name, lxc_script, mount_path):
+    """
+    here we create (and install) the actual lxc-container system.
+    one can specify a lxc_script (f.e. from /usr/lib/lxc/templates/)
+    
+    lxc-scripte nehmen folgende Parameter auf: rootfs and a hostname
+    """
+
+    p = sub.Popen(["/usr/lib/lxc/templates/"+ lxc_script, "-p", mount_path], shell=False, stdout=sub.PIPE, stderr=sub.PIPE)
+    print "Fertig: " + p.stdout.read()
+    print "Fehler: " + p.stderr.read()
+
+    return True
 
 def create_sample_config():
     """
